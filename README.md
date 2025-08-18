@@ -3,6 +3,9 @@
 RateStore is a full‑stack web application for managing **users, stores, and ratings**. It includes an **Admin Dashboard** (totals & management), **Customer** views (browse stores & rate), and **Store Owner** views (see ratings). The stack is **React + Node/Express + PostgreSQL**, with **JWT** authentication.
 
 ---
+<video src="./demoVideo.mp4" controls width="600"></video>
+![Customer View](./customer.png)  
+![Admin View](./admin.png)
 
 ## ✨ Features
 
