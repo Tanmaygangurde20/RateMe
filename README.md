@@ -4,6 +4,8 @@ RateStore is a full‑stack web application for managing **users, stores, and ra
 
 ---
 <video src="./DemoVideo.mp4" controls width="600"></video>
+[▶️ Watch Demo Video](./DemoVideo.mp4)
+
 ![Customer View](./customer.png)  
 ![Admin View](./admin.png)
 
