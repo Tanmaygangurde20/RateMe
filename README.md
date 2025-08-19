@@ -483,39 +483,9 @@ All admin routes require: `Authorization: Bearer <JWT>` with an admin user.
 
 ---
 
-## 🗂️ Project Structure
 
 ```
-ratestore/
-├── backend/
-│   ├── routes/
-│   │   ├── admin.js
-│   │   ├── customer.js
-│   │   ├── storeowner.js
-│   ├── db.js
-│   ├── .env
-│   ├── package.json
-│   ├── index.js            # (server entry)
-│
-├── frontend/
-│   ├── src/
-│   │   ├── pages/
-│   │   │   ├── AdminPage.jsx
-│   │   │   ├── CustomerPage.jsx
-│   │   │   ├── StoreOwnerPage.jsx
-│   │   │   ├── StoreDetailsPage.jsx
-│   │   │   ├── ProfilePage.jsx
-│   │   ├── api.jsx
-│   │   ├── App.jsx
-│   ├── package.json
-│
-├── screenshots/
-│   ├── dashboard.png
-│   ├── users.png
-│   ├── admins.png
-├── demo.mp4
-├── README.md
-```
+
 
 ---
 
@@ -581,9 +551,7 @@ VALUES (
 
 ---
 
-## 📸 Screenshots & Demo
 
-Place screenshots in `./screenshots/` and an optional short demo video in project root as `demo.mp4`.
 
 ---
 
