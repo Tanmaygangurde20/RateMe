@@ -11,7 +11,12 @@ A comprehensive web application for managing stores, users, and ratings with rol
 ![Admin Interface](admin.png)
 
 #### Store Interface
-![Customer Interface](Store.png)
+![Store Interface](Store.png)
+
+#### Customer Interface
+![Customer Interface](Customer.png)
+
+
 ## Table of Contents
 
 - [Features](#features)
