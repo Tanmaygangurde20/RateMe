@@ -20,8 +20,8 @@ app.post('/signup', async (req, res) => {
     const { name, email, address, password, role } = body;
     
     // Validate required fields
-    if (!name || name.length < 20 || name.length > 60) {
-      return 'Name must be 20-60 characters';
+    if (!name || name.trim().length === 0) {
+      return 'Name is required';
     }
     if (!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
       return 'Invalid email format';
@@ -112,7 +112,7 @@ app.post('/login', async (req, res) => {
         name: user.name,
         email: user.email
       }, 
-      process.env.JWT_SECRET || 'your-secret-key', 
+      require('./config').JWT_SECRET, 
       { expiresIn: '24h' }
     );
     
@@ -142,7 +142,7 @@ app.get('/profile', async (req, res) => {
     const token = authHeader.substring(7);
     const jwt = require('jsonwebtoken');
     
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+    const decoded = jwt.verify(token, require('./config').JWT_SECRET);
     const pool = require('./db');
     
     const result = await pool.query('SELECT id, name, email, address, role FROM users WHERE id = $1', [decoded.id]);

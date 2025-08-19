@@ -8,7 +8,7 @@ const router = express.Router();
 // Manual Validation for User
 const validateUser = (body) => {
     const { name, email, address, password, role } = body;
-    if (!name || name.length < 20 || name.length > 60) return 'Name must be 20-60 characters';
+    if (!name || name.trim().length === 0) return 'Name is required';
     if (!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) return 'Invalid email';
     if (!address || address.length > 400) return 'Address max 400 characters';
     if (password && !password.match(/^(?=.*[A-Z])(?=.*[!@#$&*]).{8,16}$/)) return 'Password must be 8-16 chars with uppercase and special char';
@@ -18,10 +18,11 @@ const validateUser = (body) => {
 
 // Manual Validation for Store
 const validateStore = (body) => {
-    const { name, email, address } = body;
+    const { name, email, address, password } = body;
     if (!name) return 'Name required';
     if (!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) return 'Invalid email';
     if (!address || address.length > 400) return 'Address max 400 characters';
+    if (!password || !password.match(/^(?=.*[A-Z])(?=.*[!@#$&*]).{8,16}$/)) return 'Password must be 8-16 chars with uppercase and special char';
     return null;
 };
 
@@ -138,12 +139,40 @@ router.get('/stores', verifyToken, checkRole(['admin']), async (req, res) => {
 router.post('/stores', verifyToken, checkRole(['admin']), async (req, res) => {
     const error = validateStore(req.body);
     if (error) return res.status(400).json({ error });
-    const { name, email, address, owner_id } = req.body;
-    const result = await pool.query(
-        'INSERT INTO stores (name, email, address, owner_id) VALUES ($1, $2, $3, $4) RETURNING id',
-        [name, email, address, owner_id || null]
-    );
-    res.status(201).json({ id: result.rows[0].id });
+    
+    const { name, email, address, password } = req.body;
+    
+    try {
+        // Check if email already exists
+        const existingUser = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
+        if (existingUser.rows.length > 0) {
+            return res.status(400).json({ error: 'Email already exists' });
+        }
+
+        // Create store owner user first
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const userResult = await pool.query(
+            'INSERT INTO users (name, email, password, address, role) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+            [name, email, hashedPassword, address, 'store_owner']
+        );
+        
+        const ownerId = userResult.rows[0].id;
+        
+        // Create store with the new owner
+        const storeResult = await pool.query(
+            'INSERT INTO stores (name, email, address, owner_id) VALUES ($1, $2, $3, $4) RETURNING id',
+            [name, email, address, ownerId]
+        );
+        
+        res.status(201).json({ 
+            storeId: storeResult.rows[0].id,
+            ownerId: ownerId,
+            message: 'Store and store owner created successfully'
+        });
+    } catch (err) {
+        console.error('Store creation error:', err);
+        res.status(500).json({ error: 'Failed to create store' });
+    }
 });
 
 // GET /admin/users/:id - View user details

@@ -1,5 +1,83 @@
 # RateStore
 
+<<<<<<< HEAD
+A comprehensive web application for managing stores, users, and ratings with role-based access control. Features separate dashboards for System Administrators, Normal Users, and Store Owners.
+
+## Table of Contents
+
+- [Features](#features)
+- [User Roles](#user-roles)
+- [Tech Stack](#tech-stack)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Database Setup](#database-setup)
+- [Usage](#usage)
+- [API Endpoints](#api-endpoints)
+- [Folder Structure](#folder-structure)
+- [Form Validations](#form-validations)
+- [Troubleshooting](#troubleshooting)
+
+## Features
+
+### System Administrator
+- View dashboard with total users, stores, and ratings
+- Add new stores, normal users, and admin users
+- Filter and sort users by name, email, address, and role
+- Filter and sort stores by name, email, and address
+- View detailed user information including store owner ratings
+- Manage user accounts and store accounts
+
+### Normal User (Customer)
+- Sign up and log in to the platform
+- Browse and search stores by name and address
+- Submit and modify ratings (1-5 scale) for stores
+- View personal rating history
+- Update account password
+
+### Store Owner
+- Log in to dedicated dashboard
+- View all ratings and reviews for their store
+- See average store rating
+- View customer details who rated their store
+- Update account password
+
+## User Roles
+
+1. **System Administrator** - Full system access
+2. **Normal User** - Customer with rating capabilities
+3. **Store Owner** - Store management and rating views
+
+## Tech Stack
+
+- **Frontend**: React 18, Vite, JavaScript (ES6+)
+- **Backend**: Node.js, Express.js, JWT Authentication
+- **Database**: PostgreSQL
+- **Security**: bcrypt password hashing, JWT tokens
+- **Styling**: Inline CSS (no external frameworks)
+
+## Prerequisites
+
+- Node.js v16 or higher
+- PostgreSQL v12 or higher
+- npm or yarn package manager
+
+## Installation
+
+### 1. Clone the Repository
+```bash
+git clone <repository-url>
+cd RateStore
+```
+
+### 2. Backend Setup
+```bash
+cd backend
+npm install
+```
+
+Create `.env` file in backend directory:
+```env
+=======
 RateStore is a full‑stack web application for managing **users, stores, and ratings**. It includes an **Admin Dashboard** (totals & management), **Customer** views (browse stores & rate), and **Store Owner** views (see ratings). The stack is **React + Node/Express + PostgreSQL**, with **JWT** authentication.
 
 ---
@@ -66,8 +144,197 @@ PORT=5000
 DB_HOST=localhost
 DB_USER=postgres
 DB_PASSWORD=yourpassword
+>>>>>>> b120a3735a275ab9bba4860d9a87fc831c89baf7
 DB_NAME=store_ratings
+DB_USER=postgres
+DB_PASSWORD=your_password
+DB_HOST=localhost
 DB_PORT=5432
+<<<<<<< HEAD
+JWT_SECRET=your-secret-key-for-ratestore-app-2024
+PORT=5000
+```
+
+### 3. Frontend Setup
+```bash
+cd ../frontend
+npm install
+```
+
+## Database Setup
+
+1. **Create Database**:
+```bash
+psql -U postgres
+```
+
+2. **Run the SQL script**:
+```bash
+psql -U postgres -f backend/database.sql
+```
+
+Or manually execute the commands in `backend/database.sql`
+
+3. **Create Initial Admin User** (optional):
+```bash
+cd backend
+node setup-admin.js
+```
+
+## Usage
+
+### Start the Application
+
+1. **Start Backend**:
+```bash
+cd backend
+npm start
+# Server runs on http://localhost:5000
+```
+
+2. **Start Frontend**:
+```bash
+cd frontend
+npm run dev
+# App runs on http://localhost:5173
+```
+
+### Access the Application
+
+Open `http://localhost:5173` in your browser.
+
+**Default Login Credentials** (if you ran setup-admin.js):
+- Email: `admin@ratestore.com`
+- Password: `Admin@123`
+
+## API Endpoints
+
+### Authentication
+- `POST /signup` - User registration (normal users only)
+- `POST /login` - User login (all roles)
+- `GET /profile` - Get user profile
+- `POST /logout` - User logout
+
+### Admin Routes (`/admin`)
+- `GET /dashboard` - Dashboard statistics
+- `GET /users` - List/filter users
+- `POST /users` - Add new user
+- `GET /users/:id` - View user details
+- `GET /stores` - List/filter stores
+- `POST /stores` - Add new store (creates store owner account)
+- `PATCH /password` - Update admin password
+
+### Customer Routes (`/customer`)
+- `GET /stores` - List/search stores with ratings
+- `POST /ratings` - Submit/modify store rating
+- `GET /my-ratings` - Get user's rating history
+- `PATCH /password` - Update customer password
+
+### Store Owner Routes (`/storeowner`)
+- `GET /ratings` - View store ratings and average
+- `PATCH /password` - Update store owner password
+
+## Folder Structure
+
+```
+RateStore/
+├── backend/
+│   ├── routes/
+│   │   ├── admin.js          # Admin-specific routes
+│   │   ├── customer.js       # Customer-specific routes
+│   │   └── storeowner.js     # Store owner routes
+│   ├── auth.js               # JWT authentication middleware
+│   ├── config.js             # Configuration settings
+│   ├── db.js                 # Database connection
+│   ├── index.js              # Main server file
+│   ├── database.sql          # Database schema
+│   ├── .env                  # Environment variables
+│   └── package.json          # Backend dependencies
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Login.jsx           # Login component
+│   │   │   ├── Signup.jsx          # Signup component
+│   │   │   ├── AdminDashboard.jsx  # Admin dashboard
+│   │   │   ├── CustomerDashboard.jsx # Customer dashboard
+│   │   │   └── StoreOwnerDashboard.jsx # Store owner dashboard
+│   │   ├── App.jsx           # Main app component
+│   │   └── main.jsx          # App entry point
+│   ├── index.html            # HTML template
+│   ├── package.json          # Frontend dependencies
+│   └── vite.config.js        # Vite configuration
+├── .gitignore                # Git ignore rules
+└── README.md                 # Project documentation
+```
+
+## Form Validations
+
+### User Registration/Creation
+- **Name**: Required (any length, not empty)
+- **Email**: Valid email format required
+- **Address**: Maximum 400 characters
+- **Password**: 8-16 characters, at least one uppercase letter and one special character (!@#$&*)
+
+### Store Creation
+- **Store Name**: Required
+- **Email**: Valid email format required
+- **Address**: Maximum 400 characters
+- **Password**: 8-16 characters, at least one uppercase letter and one special character
+
+### Ratings
+- **Rating**: Integer between 1-5
+- **Comment**: Optional, maximum 500 characters
+
+## Troubleshooting
+
+### Database Connection Issues
+- Ensure PostgreSQL is running
+- Verify `.env` credentials match your PostgreSQL setup
+- Check if database `store_ratings` exists
+
+### Authentication Issues
+- Verify JWT_SECRET is set in `.env` file
+- Check if token is properly stored in localStorage
+- Ensure user has correct role permissions
+
+### API Errors
+- Check backend server is running on port 5000
+- Verify CORS is enabled for frontend requests
+- Check browser console for detailed error messages
+
+### Frontend Issues
+- Ensure frontend is running on port 5173
+- Check if all components are properly imported
+- Verify API endpoints match backend routes
+
+## Development
+
+### Running Tests
+```bash
+cd backend
+node test-api.js          # Test API endpoints
+node test-complete-system.js  # Full system test
+```
+
+### Database Management
+```bash
+# Connect to database
+psql -U postgres -d store_ratings
+
+# View tables
+\dt
+
+# View users
+SELECT * FROM users;
+
+# View stores
+SELECT * FROM stores;
+```
+
+## License
+
+MIT License. See LICENSE file for details.
+=======
 JWT_SECRET=your_jwt_secret
 ```
 
@@ -314,3 +581,4 @@ Place screenshots in `./screenshots/` and an optional short demo video in projec
 ## 📄 License
 
 MIT License. See `LICENSE` for details.
+>>>>>>> b120a3735a275ab9bba4860d9a87fc831c89baf7
