@@ -8,7 +8,7 @@ A comprehensive web application for managing stores, users, and ratings with rol
 
 ### Screenshots
 #### Admin Interface
-![Admin Interface](admin.png)
+![Admin Interface](Admin.png)
 
 #### Store Interface
 ![Store Interface](Store.png)
