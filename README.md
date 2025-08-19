@@ -1,6 +1,6 @@
 # RateStore
 
-<<<<<<< HEAD
+
 A comprehensive web application for managing stores, users, and ratings with role-based access control. Features separate dashboards for System Administrators, Normal Users, and Store Owners.
 
 ## Table of Contents
