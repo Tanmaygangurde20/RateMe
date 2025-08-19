@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import DashboardHeader from './common/DashboardHeader';
+import TabNavigation from './common/TabNavigation';
+import ErrorAlert from './common/ErrorAlert';
+import Button from './common/Button';
 
 const AdminDashboard = ({ user, token, onLogout }) => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -133,76 +137,29 @@ const AdminDashboard = ({ user, token, onLogout }) => {
     }
   };
 
-  const tabStyle = (isActive) => ({
-    padding: '10px 20px',
-    margin: '0 5px',
-    border: 'none',
-    borderRadius: '4px',
-    backgroundColor: isActive ? '#007bff' : '#e9ecef',
-    color: isActive ? 'white' : '#333',
-    cursor: 'pointer'
-  });
+  const tabs = [
+    { key: 'dashboard', label: 'Dashboard' },
+    { key: 'users', label: 'Users' },
+    { key: 'stores', label: 'Stores' },
+    { key: 'addUser', label: 'Add User' },
+    { key: 'addStore', label: 'Add Store' }
+  ];
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '20px',
-        padding: '15px',
-        backgroundColor: 'white',
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-      }}>
-        <h1 style={{ margin: 0, color: '#333' }}>Admin Dashboard</h1>
-        <div>
-          <span style={{ marginRight: '15px', color: '#666' }}>Welcome, {user.name}</span>
-          <button
-            onClick={onLogout}
-            style={{
-              padding: '8px 16px',
-              backgroundColor: '#dc3545',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
-          >
-            Logout
-          </button>
-        </div>
-      </div>
+      <DashboardHeader
+        title="Admin Dashboard"
+        userName={user.name}
+        onLogout={onLogout}
+      />
 
-      <div style={{ marginBottom: '20px' }}>
-        <button onClick={() => setActiveTab('dashboard')} style={tabStyle(activeTab === 'dashboard')}>
-          Dashboard
-        </button>
-        <button onClick={() => setActiveTab('users')} style={tabStyle(activeTab === 'users')}>
-          Users
-        </button>
-        <button onClick={() => setActiveTab('stores')} style={tabStyle(activeTab === 'stores')}>
-          Stores
-        </button>
-        <button onClick={() => setActiveTab('addUser')} style={tabStyle(activeTab === 'addUser')}>
-          Add User
-        </button>
-        <button onClick={() => setActiveTab('addStore')} style={tabStyle(activeTab === 'addStore')}>
-          Add Store
-        </button>
-      </div>
+      <TabNavigation
+        tabs={tabs}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      />
 
-      {error && (
-        <div style={{
-          backgroundColor: '#f8d7da',
-          color: '#721c24',
-          padding: '10px',
-          borderRadius: '4px',
-          marginBottom: '15px'
-        }}>
-          {error}
-        </div>
-      )}
+      <ErrorAlert error={error} onClear={() => setError('')} />
 
       {activeTab === 'dashboard' && (
         <div style={{
@@ -266,7 +223,7 @@ const AdminDashboard = ({ user, token, onLogout }) => {
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
         }}>
           <h2>Users Management</h2>
-          
+
           {/* Filters */}
           <div style={{
             display: 'grid',
@@ -281,7 +238,7 @@ const AdminDashboard = ({ user, token, onLogout }) => {
               type="text"
               placeholder="Filter by name"
               value={userFilters.name}
-              onChange={(e) => setUserFilters({...userFilters, name: e.target.value})}
+              onChange={(e) => setUserFilters({ ...userFilters, name: e.target.value })}
               style={{
                 padding: '8px',
                 border: '1px solid #ddd',
@@ -292,7 +249,7 @@ const AdminDashboard = ({ user, token, onLogout }) => {
               type="text"
               placeholder="Filter by email"
               value={userFilters.email}
-              onChange={(e) => setUserFilters({...userFilters, email: e.target.value})}
+              onChange={(e) => setUserFilters({ ...userFilters, email: e.target.value })}
               style={{
                 padding: '8px',
                 border: '1px solid #ddd',
@@ -301,7 +258,7 @@ const AdminDashboard = ({ user, token, onLogout }) => {
             />
             <select
               value={userFilters.role}
-              onChange={(e) => setUserFilters({...userFilters, role: e.target.value})}
+              onChange={(e) => setUserFilters({ ...userFilters, role: e.target.value })}
               style={{
                 padding: '8px',
                 border: '1px solid #ddd',
@@ -313,19 +270,9 @@ const AdminDashboard = ({ user, token, onLogout }) => {
               <option value="normal">Normal</option>
               <option value="store_owner">Store Owner</option>
             </select>
-            <button
-              onClick={fetchUsers}
-              style={{
-                padding: '8px 16px',
-                backgroundColor: '#007bff',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer'
-              }}
-            >
+            <Button onClick={fetchUsers} variant="primary">
               Apply Filters
-            </button>
+            </Button>
           </div>
 
           {/* Users Table */}
@@ -366,7 +313,7 @@ const AdminDashboard = ({ user, token, onLogout }) => {
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
         }}>
           <h2>Stores Management</h2>
-          
+
           {/* Filters */}
           <div style={{
             display: 'grid',
@@ -381,7 +328,7 @@ const AdminDashboard = ({ user, token, onLogout }) => {
               type="text"
               placeholder="Filter by name"
               value={storeFilters.name}
-              onChange={(e) => setStoreFilters({...storeFilters, name: e.target.value})}
+              onChange={(e) => setStoreFilters({ ...storeFilters, name: e.target.value })}
               style={{
                 padding: '8px',
                 border: '1px solid #ddd',
@@ -392,7 +339,7 @@ const AdminDashboard = ({ user, token, onLogout }) => {
               type="text"
               placeholder="Filter by email"
               value={storeFilters.email}
-              onChange={(e) => setStoreFilters({...storeFilters, email: e.target.value})}
+              onChange={(e) => setStoreFilters({ ...storeFilters, email: e.target.value })}
               style={{
                 padding: '8px',
                 border: '1px solid #ddd',
@@ -403,26 +350,16 @@ const AdminDashboard = ({ user, token, onLogout }) => {
               type="text"
               placeholder="Filter by address"
               value={storeFilters.address}
-              onChange={(e) => setStoreFilters({...storeFilters, address: e.target.value})}
+              onChange={(e) => setStoreFilters({ ...storeFilters, address: e.target.value })}
               style={{
                 padding: '8px',
                 border: '1px solid #ddd',
                 borderRadius: '4px'
               }}
             />
-            <button
-              onClick={fetchStores}
-              style={{
-                padding: '8px 16px',
-                backgroundColor: '#007bff',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer'
-              }}
-            >
+            <Button onClick={fetchStores} variant="primary">
               Apply Filters
-            </button>
+            </Button>
           </div>
 
           {/* Stores Table */}
@@ -471,7 +408,7 @@ const AdminDashboard = ({ user, token, onLogout }) => {
               <input
                 type="text"
                 value={newUser.name}
-                onChange={(e) => setNewUser({...newUser, name: e.target.value})}
+                onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
                 required
                 style={{
                   width: '100%',
@@ -487,7 +424,7 @@ const AdminDashboard = ({ user, token, onLogout }) => {
               <input
                 type="email"
                 value={newUser.email}
-                onChange={(e) => setNewUser({...newUser, email: e.target.value})}
+                onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
                 required
                 style={{
                   width: '100%',
@@ -502,7 +439,7 @@ const AdminDashboard = ({ user, token, onLogout }) => {
               <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Address (max 400 chars):</label>
               <textarea
                 value={newUser.address}
-                onChange={(e) => setNewUser({...newUser, address: e.target.value})}
+                onChange={(e) => setNewUser({ ...newUser, address: e.target.value })}
                 required
                 style={{
                   width: '100%',
@@ -519,7 +456,7 @@ const AdminDashboard = ({ user, token, onLogout }) => {
               <input
                 type="password"
                 value={newUser.password}
-                onChange={(e) => setNewUser({...newUser, password: e.target.value})}
+                onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
                 required
                 style={{
                   width: '100%',
@@ -534,7 +471,7 @@ const AdminDashboard = ({ user, token, onLogout }) => {
               <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Role:</label>
               <select
                 value={newUser.role}
-                onChange={(e) => setNewUser({...newUser, role: e.target.value})}
+                onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
                 style={{
                   width: '100%',
                   padding: '10px',
@@ -548,21 +485,14 @@ const AdminDashboard = ({ user, token, onLogout }) => {
                 <option value="store_owner">Store Owner</option>
               </select>
             </div>
-            <button
+            <Button
               type="submit"
               disabled={loading}
-              style={{
-                width: '100%',
-                padding: '12px',
-                backgroundColor: loading ? '#6c757d' : '#28a745',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: loading ? 'not-allowed' : 'pointer'
-              }}
+              variant="success"
+              style={{ width: '100%' }}
             >
               {loading ? 'Adding...' : 'Add User'}
-            </button>
+            </Button>
           </form>
         </div>
       )}
@@ -581,7 +511,7 @@ const AdminDashboard = ({ user, token, onLogout }) => {
               <input
                 type="text"
                 value={newStore.name}
-                onChange={(e) => setNewStore({...newStore, name: e.target.value})}
+                onChange={(e) => setNewStore({ ...newStore, name: e.target.value })}
                 required
                 style={{
                   width: '100%',
@@ -597,7 +527,7 @@ const AdminDashboard = ({ user, token, onLogout }) => {
               <input
                 type="email"
                 value={newStore.email}
-                onChange={(e) => setNewStore({...newStore, email: e.target.value})}
+                onChange={(e) => setNewStore({ ...newStore, email: e.target.value })}
                 required
                 style={{
                   width: '100%',
@@ -612,7 +542,7 @@ const AdminDashboard = ({ user, token, onLogout }) => {
               <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Address:</label>
               <textarea
                 value={newStore.address}
-                onChange={(e) => setNewStore({...newStore, address: e.target.value})}
+                onChange={(e) => setNewStore({ ...newStore, address: e.target.value })}
                 required
                 style={{
                   width: '100%',
@@ -629,7 +559,7 @@ const AdminDashboard = ({ user, token, onLogout }) => {
               <input
                 type="password"
                 value={newStore.password}
-                onChange={(e) => setNewStore({...newStore, password: e.target.value})}
+                onChange={(e) => setNewStore({ ...newStore, password: e.target.value })}
                 required
                 style={{
                   width: '100%',
@@ -640,21 +570,14 @@ const AdminDashboard = ({ user, token, onLogout }) => {
                 }}
               />
             </div>
-            <button
+            <Button
               type="submit"
               disabled={loading}
-              style={{
-                width: '100%',
-                padding: '12px',
-                backgroundColor: loading ? '#6c757d' : '#28a745',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: loading ? 'not-allowed' : 'pointer'
-              }}
+              variant="success"
+              style={{ width: '100%' }}
             >
               {loading ? 'Adding...' : 'Add Store'}
-            </button>
+            </Button>
           </form>
         </div>
       )}

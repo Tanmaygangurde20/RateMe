@@ -4,6 +4,7 @@ import Signup from './components/Signup';
 import AdminDashboard from './components/AdminDashboard';
 import CustomerDashboard from './components/CustomerDashboard';
 import StoreOwnerDashboard from './components/StoreOwnerDashboard';
+import Button from './components/common/Button';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -91,34 +92,20 @@ function App() {
           marginBottom: '20px',
           textAlign: 'center'
         }}>
-          <button
+          <Button
             onClick={() => setCurrentView('login')}
-            style={{
-              padding: '10px 20px',
-              margin: '0 10px',
-              border: 'none',
-              borderRadius: '4px',
-              backgroundColor: currentView === 'login' ? '#007bff' : '#e9ecef',
-              color: currentView === 'login' ? 'white' : '#333',
-              cursor: 'pointer'
-            }}
+            variant={currentView === 'login' ? 'primary' : 'secondary'}
+            style={{ margin: '0 10px' }}
           >
             Login
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => setCurrentView('signup')}
-            style={{
-              padding: '10px 20px',
-              margin: '0 10px',
-              border: 'none',
-              borderRadius: '4px',
-              backgroundColor: currentView === 'signup' ? '#007bff' : '#e9ecef',
-              color: currentView === 'signup' ? 'white' : '#333',
-              cursor: 'pointer'
-            }}
+            variant={currentView === 'signup' ? 'primary' : 'secondary'}
+            style={{ margin: '0 10px' }}
           >
             Sign Up
-          </button>
+          </Button>
         </div>
 
         {currentView === 'login' ? (

@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import ErrorAlert from './common/ErrorAlert';
+import Button from './common/Button';
 
 const Login = ({ onLogin }) => {
   const [formData, setFormData] = useState({
@@ -51,18 +53,7 @@ const Login = ({ onLogin }) => {
         color: '#333'
       }}>Login</h2>
       
-      {error && (
-        <div style={{
-          backgroundColor: '#f8d7da',
-          color: '#721c24',
-          padding: '10px',
-          borderRadius: '4px',
-          marginBottom: '15px',
-          border: '1px solid #f5c6cb'
-        }}>
-          {error}
-        </div>
-      )}
+      <ErrorAlert error={error} onClear={() => setError('')} />
 
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: '15px' }}>
@@ -113,22 +104,14 @@ const Login = ({ onLogin }) => {
           />
         </div>
 
-        <button
+        <Button
           type="submit"
           disabled={loading}
-          style={{
-            width: '100%',
-            padding: '12px',
-            backgroundColor: loading ? '#6c757d' : '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            fontSize: '16px',
-            cursor: loading ? 'not-allowed' : 'pointer'
-          }}
+          variant="primary"
+          style={{ width: '100%' }}
         >
           {loading ? 'Logging in...' : 'Login'}
-        </button>
+        </Button>
       </form>
     </div>
   );

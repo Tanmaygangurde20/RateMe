@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import ErrorAlert from './common/ErrorAlert';
+import Button from './common/Button';
 
 const Signup = ({ onSignup }) => {
   const [formData, setFormData] = useState({
@@ -80,18 +82,7 @@ const Signup = ({ onSignup }) => {
         color: '#333'
       }}>Sign Up</h2>
       
-      {error && (
-        <div style={{
-          backgroundColor: '#f8d7da',
-          color: '#721c24',
-          padding: '10px',
-          borderRadius: '4px',
-          marginBottom: '15px',
-          border: '1px solid #f5c6cb'
-        }}>
-          {error}
-        </div>
-      )}
+      <ErrorAlert error={error} onClear={() => setError('')} />
 
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: '15px' }}>
@@ -191,22 +182,14 @@ const Signup = ({ onSignup }) => {
           />
         </div>
 
-        <button
+        <Button
           type="submit"
           disabled={loading}
-          style={{
-            width: '100%',
-            padding: '12px',
-            backgroundColor: loading ? '#6c757d' : '#28a745',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            fontSize: '16px',
-            cursor: loading ? 'not-allowed' : 'pointer'
-          }}
+          variant="success"
+          style={{ width: '100%' }}
         >
           {loading ? 'Creating Account...' : 'Sign Up'}
-        </button>
+        </Button>
       </form>
     </div>
   );

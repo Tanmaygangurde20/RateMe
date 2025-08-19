@@ -1,4 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import DashboardHeader from './common/DashboardHeader';
+import TabNavigation from './common/TabNavigation';
+import ErrorAlert from './common/ErrorAlert';
+import Button from './common/Button';
+import Modal from './common/Modal';
 
 const CustomerDashboard = ({ user, token, onLogout }) => {
   const [activeTab, setActiveTab] = useState('stores');
@@ -84,67 +89,26 @@ const CustomerDashboard = ({ user, token, onLogout }) => {
     }
   };
 
-  const tabStyle = (isActive) => ({
-    padding: '10px 20px',
-    margin: '0 5px',
-    border: 'none',
-    borderRadius: '4px',
-    backgroundColor: isActive ? '#007bff' : '#e9ecef',
-    color: isActive ? 'white' : '#333',
-    cursor: 'pointer'
-  });
+  const tabs = [
+    { key: 'stores', label: 'Browse Stores' },
+    { key: 'myRatings', label: 'My Ratings' }
+  ];
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '20px',
-        padding: '15px',
-        backgroundColor: 'white',
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-      }}>
-        <h1 style={{ margin: 0, color: '#333' }}>Customer Dashboard</h1>
-        <div>
-          <span style={{ marginRight: '15px', color: '#666' }}>Welcome, {user.name}</span>
-          <button
-            onClick={onLogout}
-            style={{
-              padding: '8px 16px',
-              backgroundColor: '#dc3545',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
-          >
-            Logout
-          </button>
-        </div>
-      </div>
+      <DashboardHeader 
+        title="Customer Dashboard" 
+        userName={user.name} 
+        onLogout={onLogout} 
+      />
 
-      <div style={{ marginBottom: '20px' }}>
-        <button onClick={() => setActiveTab('stores')} style={tabStyle(activeTab === 'stores')}>
-          Browse Stores
-        </button>
-        <button onClick={() => setActiveTab('myRatings')} style={tabStyle(activeTab === 'myRatings')}>
-          My Ratings
-        </button>
-      </div>
+      <TabNavigation 
+        tabs={tabs}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      />
 
-      {error && (
-        <div style={{
-          backgroundColor: '#f8d7da',
-          color: '#721c24',
-          padding: '10px',
-          borderRadius: '4px',
-          marginBottom: '15px'
-        }}>
-          {error}
-        </div>
-      )}
+      <ErrorAlert error={error} onClear={() => setError('')} />
 
       {activeTab === 'stores' && (
         <div style={{
@@ -188,19 +152,9 @@ const CustomerDashboard = ({ user, token, onLogout }) => {
                 borderRadius: '4px'
               }}
             />
-            <button
-              onClick={fetchStores}
-              style={{
-                padding: '8px 16px',
-                backgroundColor: '#007bff',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer'
-              }}
-            >
+            <Button onClick={fetchStores} variant="primary">
               Search
-            </button>
+            </Button>
           </div>
 
           {/* Stores List */}
@@ -230,7 +184,7 @@ const CustomerDashboard = ({ user, token, onLogout }) => {
                     </p>
                   )}
                 </div>
-                <button
+                <Button
                   onClick={() => {
                     setSelectedStore(store);
                     setRatingForm({
@@ -238,18 +192,11 @@ const CustomerDashboard = ({ user, token, onLogout }) => {
                       comment: store.user_comment || ''
                     });
                   }}
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: store.user_rating ? '#ffc107' : '#007bff',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    marginLeft: '15px'
-                  }}
+                  variant={store.user_rating ? 'warning' : 'primary'}
+                  style={{ marginLeft: '15px' }}
                 >
                   {store.user_rating ? 'Update Rating' : 'Rate Store'}
-                </button>
+                </Button>
               </div>
             ))}
           </div>
@@ -311,98 +258,66 @@ const CustomerDashboard = ({ user, token, onLogout }) => {
       )}
 
       {/* Rating Modal */}
-      {selectedStore && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 1000
-        }}>
-          <div style={{
-            backgroundColor: 'white',
-            padding: '30px',
-            borderRadius: '8px',
-            width: '90%',
-            maxWidth: '400px'
-          }}>
-            <h3 style={{ margin: '0 0 20px 0' }}>Rate {selectedStore.name}</h3>
-            <form onSubmit={submitRating}>
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Rating (1-5):</label>
-                <select
-                  value={ratingForm.rating}
-                  onChange={(e) => setRatingForm({...ratingForm, rating: parseInt(e.target.value)})}
-                  style={{
-                    width: '100%',
-                    padding: '10px',
-                    border: '1px solid #ddd',
-                    borderRadius: '4px'
-                  }}
-                >
-                  <option value={1}>1 - Poor</option>
-                  <option value={2}>2 - Fair</option>
-                  <option value={3}>3 - Good</option>
-                  <option value={4}>4 - Very Good</option>
-                  <option value={5}>5 - Excellent</option>
-                </select>
-              </div>
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Comment (optional):</label>
-                <textarea
-                  value={ratingForm.comment}
-                  onChange={(e) => setRatingForm({...ratingForm, comment: e.target.value})}
-                  style={{
-                    width: '100%',
-                    padding: '10px',
-                    border: '1px solid #ddd',
-                    borderRadius: '4px',
-                    minHeight: '80px',
-                    boxSizing: 'border-box'
-                  }}
-                />
-              </div>
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  style={{
-                    flex: 1,
-                    padding: '12px',
-                    backgroundColor: '#28a745',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Submit Rating
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSelectedStore(null)}
-                  style={{
-                    flex: 1,
-                    padding: '12px',
-                    backgroundColor: '#6c757d',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
+      <Modal 
+        isOpen={!!selectedStore} 
+        onClose={() => setSelectedStore(null)}
+        title={selectedStore ? `Rate ${selectedStore.name}` : ''}
+      >
+        <form onSubmit={submitRating}>
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Rating (1-5):</label>
+            <select
+              value={ratingForm.rating}
+              onChange={(e) => setRatingForm({...ratingForm, rating: parseInt(e.target.value)})}
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: '1px solid #ddd',
+                borderRadius: '4px'
+              }}
+            >
+              <option value={1}>1 - Poor</option>
+              <option value={2}>2 - Fair</option>
+              <option value={3}>3 - Good</option>
+              <option value={4}>4 - Very Good</option>
+              <option value={5}>5 - Excellent</option>
+            </select>
           </div>
-        </div>
-      )}
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Comment (optional):</label>
+            <textarea
+              value={ratingForm.comment}
+              onChange={(e) => setRatingForm({...ratingForm, comment: e.target.value})}
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                minHeight: '80px',
+                boxSizing: 'border-box'
+              }}
+            />
+          </div>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <Button
+              type="submit"
+              disabled={loading}
+              variant="success"
+              style={{ flex: 1 }}
+            >
+              Submit Rating
+            </Button>
+            <Button
+              type="button"
+              onClick={() => setSelectedStore(null)}
+              variant="secondary"
+              style={{ flex: 1 }}
+            >
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 };

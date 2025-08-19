@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import DashboardHeader from './common/DashboardHeader';
+import TabNavigation from './common/TabNavigation';
+import ErrorAlert from './common/ErrorAlert';
+import Button from './common/Button';
 
 const StoreOwnerDashboard = ({ user, token, onLogout }) => {
   const [activeTab, setActiveTab] = useState('ratings');
@@ -58,67 +62,26 @@ const StoreOwnerDashboard = ({ user, token, onLogout }) => {
     }
   };
 
-  const tabStyle = (isActive) => ({
-    padding: '10px 20px',
-    margin: '0 5px',
-    border: 'none',
-    borderRadius: '4px',
-    backgroundColor: isActive ? '#007bff' : '#e9ecef',
-    color: isActive ? 'white' : '#333',
-    cursor: 'pointer'
-  });
+  const tabs = [
+    { key: 'ratings', label: 'Store Ratings' },
+    { key: 'password', label: 'Change Password' }
+  ];
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '20px',
-        padding: '15px',
-        backgroundColor: 'white',
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-      }}>
-        <h1 style={{ margin: 0, color: '#333' }}>Store Owner Dashboard</h1>
-        <div>
-          <span style={{ marginRight: '15px', color: '#666' }}>Welcome, {user.name}</span>
-          <button
-            onClick={onLogout}
-            style={{
-              padding: '8px 16px',
-              backgroundColor: '#dc3545',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
-          >
-            Logout
-          </button>
-        </div>
-      </div>
+      <DashboardHeader 
+        title="Store Owner Dashboard" 
+        userName={user.name} 
+        onLogout={onLogout} 
+      />
 
-      <div style={{ marginBottom: '20px' }}>
-        <button onClick={() => setActiveTab('ratings')} style={tabStyle(activeTab === 'ratings')}>
-          Store Ratings
-        </button>
-        <button onClick={() => setActiveTab('password')} style={tabStyle(activeTab === 'password')}>
-          Change Password
-        </button>
-      </div>
+      <TabNavigation 
+        tabs={tabs}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      />
 
-      {error && (
-        <div style={{
-          backgroundColor: '#f8d7da',
-          color: '#721c24',
-          padding: '10px',
-          borderRadius: '4px',
-          marginBottom: '15px'
-        }}>
-          {error}
-        </div>
-      )}
+      <ErrorAlert error={error} onClear={() => setError('')} />
 
       {activeTab === 'ratings' && (
         <div style={{
@@ -255,22 +218,14 @@ const StoreOwnerDashboard = ({ user, token, onLogout }) => {
                 }}
               />
             </div>
-            <button
+            <Button
               type="submit"
               disabled={loading}
-              style={{
-                width: '100%',
-                padding: '12px',
-                backgroundColor: loading ? '#6c757d' : '#007bff',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                fontSize: '16px',
-                cursor: loading ? 'not-allowed' : 'pointer'
-              }}
+              variant="primary"
+              style={{ width: '100%' }}
             >
               {loading ? 'Updating...' : 'Update Password'}
-            </button>
+            </Button>
           </form>
         </div>
       )}
