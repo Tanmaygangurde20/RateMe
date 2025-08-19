@@ -2,7 +2,16 @@
 
 
 A comprehensive web application for managing stores, users, and ratings with role-based access control. Features separate dashboards for System Administrators, Normal Users, and Store Owners.
+### Demo Video
+[![Watch the Demo](Store.png)](Demo.mp4)  
+*Click on the image above to view the demo video.*
 
+### Screenshots
+#### Admin Interface
+![Admin Interface](admin.png)
+
+#### Customer Interface
+![Customer Interface](customer.png)
 ## Table of Contents
 
 - [Features](#features)
